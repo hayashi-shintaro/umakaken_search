@@ -2,20 +2,16 @@
 import {ref, inject, computed} from "vue";
 import type { Area } from "@/interfaces";
 
-const selectedArea:string[] = ref([]);
-const chenge_counter:numbet=ref(0);
-
 interface Props {
     area: string;
 }
-
 interface Emits {
-    (event: "areaSelectChanged", selectedArea:string[]): void
+    (event: "areaSelectChanged", area:string, selectedSubArea:string[]): void
 }
 
 const emit = defineEmits<Emits>();
-
 const props = defineProps<Props>();
+const selectedSubArea:string[] = ref([]);
 const areaList = inject("AreaList") as Map<string, Area>;
 const targetArea = computed(
     (): Area => {
@@ -24,8 +20,7 @@ const targetArea = computed(
 )
 
 const onCheckBoxChenged = (): void => {
-    chenge_counter.value += 1;
-    emit("areaSelectChanged", selectedArea)
+    emit("areaSelectChanged", props.area, selectedSubArea.value)
 }
 </script>
 
@@ -35,10 +30,10 @@ const onCheckBoxChenged = (): void => {
         <div class = "area_select">
             <template v-for="(sub_area, idx) in targetArea.sub_area">
                 <label>{{ sub_area }}</label>
-                <input type="checkbox" v-model="selectedArea" v-bind:value=sub_area v-on:change="onCheckBoxChenged">
+                <input type="checkbox" v-model="selectedSubArea" v-bind:value=sub_area v-on:change="onCheckBoxChenged">
             </template>
+            <p>{{ selectedSubArea }}</p>
         </div>
-        <p>{{ chenge_counter }}回目の変更</p>
     </main>
 </template>
 
