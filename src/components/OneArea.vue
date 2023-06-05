@@ -6,12 +6,12 @@ interface Props {
     area: string;
 }
 interface Emits {
-    (event: "areaSelectChanged", area:string, selectedSubArea:string[]): void
+    (event: "areaSelectChanged", area:string, selectedCities:string[]): void
 }
 
 const emit = defineEmits<Emits>();
 const props = defineProps<Props>();
-const selectedSubArea:string[] = ref([]);
+const selectedCities:string[] = ref([]);
 const areaList = inject("AreaList") as Map<string, Area>;
 const targetArea = computed(
     (): Area => {
@@ -19,20 +19,19 @@ const targetArea = computed(
     }
 )
 
-const onCheckBoxChenged = (): void => {
-    emit("areaSelectChanged", props.area, selectedSubArea.value)
+const onCheckBoxChanged = (): void => {
+    emit("areaSelectChanged", props.area, selectedCities.value)
 }
 </script>
 
 <template>
     <main>
-        <h2>{{ targetArea.area}}</h2>
+        <h2>{{ targetArea.area }}</h2>
         <div class = "area_select">
-            <template v-for="(sub_area, idx) in targetArea.sub_area">
-                <label>{{ sub_area }}</label>
-                <input type="checkbox" v-model="selectedSubArea" v-bind:value=sub_area v-on:change="onCheckBoxChenged">
+            <template v-for="(cities, idx) in targetArea.cities">
+                <label>{{ cities }}</label>
+                <input type="checkbox" v-model="selectedCities" v-bind:value=cities v-on:change="onCheckBoxChanged">
             </template>
-            <p>{{ selectedSubArea }}</p>
         </div>
     </main>
 </template>
@@ -42,7 +41,11 @@ main {
     border:red 1px solid;
 }
 
-div {
+.area_select {
+    font-size: 12pt;
+    width: 400px;
     display: flex;
+    justify-content:flex-start;
+    flex-wrap:wrap;
 }
 </style>
